@@ -1,0 +1,15 @@
+# Minimal T-01 — dilengkapi di T-03
+node_modules/
+dist/
+.env
+.env.local
+*.local
+*.log
+.obsidian-mcp-key
+# Vault Obsidian (dokumen kerja lokal + config plugin berisi secret) —
+# JANGAN pernah masuk repo/GitHub (termasuk riwayat).
+obs_aplikasi_chat_sederhana/
+# Artefak screenshot/review browser (playwright MCP, harness) — jangan commit
+*.png
+.playwright-mcp/
+.DS_Store

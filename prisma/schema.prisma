@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Profil lokal (terpisah dari user Clerk). Lihat Tech Spec Bagian 2.
+model User {
+  id          String          @id @default(uuid()) @db.Uuid
+  clerkId     String          @unique
+  displayName String          @default("anonymous") @db.VarChar(30)
+  createdAt   DateTime        @default(now())
+  messages    GlobalMessage[]
+
+  @@map("users")
+}
+
+// Room chat global (di-seed di T-05). Private room TIDAK di DB (in-memory).
+model GlobalRoom {
+  id        String          @id @default(uuid()) @db.Uuid
+  name      String
+  createdAt DateTime        @default(now())
+  messages  GlobalMessage[]
+
+  @@map("global_rooms")
+}
+
+// Pesan global (persist). body max 500 char divalidasi di app (R5).
+model GlobalMessage {
+  id                  String     @id @default(uuid()) @db.Uuid
+  roomId              String     @db.Uuid
+  room                GlobalRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  userId              String     @db.Uuid
+  user                User       @relation(fields: [userId], references: [id])
+  displayNameSnapshot String
+  body                String     @db.Text
+  createdAt           DateTime   @default(now())
+
+  @@index([roomId, createdAt])
+  @@map("global_messages")
+}

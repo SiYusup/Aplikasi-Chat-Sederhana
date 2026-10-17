@@ -1,0 +1,8 @@
+obs_aplikasi_chat_sederhana/
+.agents/
+.claude/
+src/generated/
+dist/
+node_modules/
+history.db
+package-lock.json

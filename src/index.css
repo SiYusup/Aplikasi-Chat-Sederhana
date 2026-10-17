@@ -1,0 +1,720 @@
+/* Token neobrutalism AnonChat — sumber: 3-UI-System-Design.md §2
+   Tailwind v4 CSS-first: @theme di bawah men-generate utility
+   (bg-primary, font-head, shadow-nb, rounded-nb, border-3, ...). */
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Mono:wght@700&display=swap');
+@import 'tailwindcss';
+
+/* Dark mode manual via data-theme (dipakai T-17: toggle + localStorage) */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-mint: var(--mint);
+  --color-destructive: var(--destructive);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --font-head: 'Fredoka', ui-rounded, sans-serif;
+  --font-sans: 'Nunito', ui-rounded, system-ui, sans-serif;
+  --font-mono: 'Space Mono', ui-monospace, monospace;
+
+  --shadow-nb-sm: 3px 3px 0 0 var(--border-color);
+  --shadow-nb: 4px 4px 0 0 var(--border-color);
+  --shadow-nb-lg: 6px 6px 0 0 var(--border-color);
+  --shadow-nb-xl: 8px 8px 0 0 var(--border-color);
+
+  --radius-nb-sm: 6px;
+  --radius-nb: 8px;
+}
+
+:root {
+  --background: #fff4f8;
+  --foreground: #1a1a2e;
+  --card: #ffffff;
+  --primary: #ff6b9d;
+  --primary-hover: #ff4d87;
+  --secondary: #74c0fc;
+  --accent: #ffd23f;
+  --mint: #7beeb4;
+  --destructive: #e63946;
+  --muted: #f5e6ec;
+  --muted-foreground: #6b5b6e;
+  --border-color: #1a1a2e;
+  --ring: #74c0fc;
+}
+
+[data-theme='dark'] {
+  --background: #1d1a24;
+  --foreground: #f5f0e6;
+  --card: #2b2738;
+  --primary: #ff6b9d;
+  --primary-hover: #ff4d87;
+  --secondary: #74c0fc;
+  --accent: #ffd23f;
+  --mint: #7beeb4;
+  --destructive: #ff8585;
+  --muted: #353147;
+  --muted-foreground: #b3a8c4;
+  --border-color: #f5f0e6;
+  --ring: #74c0fc;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+/* ---- Komponen neobrutalism (T-22, UI doc §3): border 3px + shadow keras.
+   Phosphor Bold untuk ikon; tombol ikon-only wajib aria-label (di TSX). ---- */
+.nb-center {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.nb-card {
+  width: 100%;
+  max-width: 26rem;
+  background: var(--card);
+  border: 3px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 6px 6px 0 0 var(--border-color);
+  padding: 1.5rem;
+}
+.nb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--primary);
+  color: #1a1a2e;
+  font-family: var(--font-head);
+  font-weight: 600;
+  border: 3px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 3px 3px 0 0 var(--border-color);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+.nb-btn:hover {
+  background: var(--primary-hover);
+}
+.nb-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 0 var(--border-color);
+}
+.nb-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.nb-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card);
+  color: var(--foreground);
+  font-family: var(--font-head);
+  font-weight: 600;
+  border: 3px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 3px 3px 0 0 var(--border-color);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+.nb-btn-sm {
+  background: var(--accent);
+  color: #1a1a2e;
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: 3px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 3px 3px 0 0 var(--border-color);
+  padding: 0.25rem 0.75rem;
+  cursor: pointer;
+}
+.nb-btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: var(--card);
+  color: var(--foreground);
+  font-size: 1.25rem;
+  border: 3px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 3px 3px 0 0 var(--border-color);
+  cursor: pointer;
+  flex: none;
+}
+.nb-btn-icon:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 0 var(--border-color);
+}
+.nb-input {
+  width: 100%;
+  background: var(--card);
+  color: var(--foreground);
+  border: 3px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  font-family: var(--font-sans);
+  resize: none;
+}
+.nb-input:focus {
+  outline: 3px solid var(--ring);
+  outline-offset: 1px;
+}
+.nb-room-code {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  text-align: center;
+  font-size: 1.25rem;
+}
+.nb-error {
+  background: var(--destructive);
+  color: #fff;
+  border: 3px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
+.nb-toast {
+  background: var(--mint);
+  color: #1a1a2e;
+  border: 3px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 3px 3px 0 0 var(--border-color);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.nb-link {
+  color: var(--foreground);
+  font-weight: 600;
+  text-decoration: underline;
+}
+.nb-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgb(0 0 0 / 0.55);
+}
+
+/* ---- Halaman auth (T-35): SATU panel berbingkai — brand + form Clerk ---- */
+.nb-auth {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  padding: 3.5rem 1rem;
+}
+.nb-auth-toggle {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 2;
+}
+.nb-auth-panel {
+  margin: auto;
+  width: min(58rem, 100%);
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  background: var(--card);
+  border: 3px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 8px 8px 0 0 var(--border-color);
+  overflow: hidden;
+}
+.nb-auth-brand {
+  background: var(--primary);
+  color: #1a1a2e;
+  border-right: 3px solid var(--border-color);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.nb-auth-brand-text {
+  margin-top: 0.875rem;
+}
+.nb-auth-brand-text h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.nb-auth-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  font-size: 2rem;
+  background: var(--card);
+  color: var(--foreground);
+  border: 3px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 3px 3px 0 0 var(--border-color);
+  flex: none;
+}
+.nb-auth-tagline {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 1.125rem;
+  margin-top: 0.375rem;
+}
+.nb-auth-points {
+  list-style: none;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+.nb-auth-points li {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  background: var(--card);
+  color: var(--foreground);
+  border: 3px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 3px 3px 0 0 var(--border-color);
+  padding: 0.5rem 0.75rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+.nb-auth-points svg {
+  flex: none;
+  font-size: 1.25rem;
+}
+.nb-auth-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--card);
+}
+/* Rantai flex Clerk: form mengisi kolom, footer menempel di dasar panel
+   (footer Clerk ada di dalam cardBox, setelah card — bukan di luar). */
+.nb-auth-card .cl-rootBox {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.nb-auth-card .cl-cardBox {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.nb-auth-card .cl-card {
+  flex: 1;
+  width: 100%;
+  max-width: none;
+}
+/* Overlay "Development mode" Clerk (blok berpola, class ter-hash) = sulit
+   didesain via appearance → sembunyikan; hilang sendiri saat production keys. */
+.nb-auth-card [data-clerk-dev-mode-overlay] {
+  display: none !important;
+}
+.nb-auth-card [data-clerk-dev-mode-notice] {
+  color: var(--muted-foreground);
+  font-size: 0.6875rem;
+}
+/* Clerk memakai warna hardcoded (bukan token) untuk teks sekunder + placeholder —
+   paksa ikut tema agar terbaca di dark mode. */
+.nb-auth-card .cl-footerItem p[data-color='inherit'],
+.nb-auth-card .cl-footerItem a {
+  color: var(--muted-foreground);
+}
+.nb-auth-card .cl-formFieldInput::placeholder {
+  color: var(--muted-foreground);
+  opacity: 0.8;
+}
+@media (max-width: 860px) {
+  .nb-auth {
+    padding: 4.5rem 0.875rem 2rem;
+  }
+  .nb-auth-panel {
+    grid-template-columns: 1fr;
+    box-shadow: 6px 6px 0 0 var(--border-color);
+  }
+  .nb-auth-brand {
+    border-right: none;
+    border-bottom: 3px solid var(--border-color);
+    padding: 1.125rem 1.25rem;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.875rem;
+    justify-content: flex-start;
+  }
+  .nb-auth-brand-text {
+    margin-top: 0;
+  }
+  .nb-auth-brand-text h1 {
+    font-size: 1.375rem;
+  }
+  .nb-auth-tagline {
+    font-size: 0.9375rem;
+    margin-top: 0.125rem;
+  }
+  .nb-auth-badge {
+    width: 2.625rem;
+    height: 2.625rem;
+    font-size: 1.5rem;
+    box-shadow: 2px 2px 0 0 var(--border-color);
+  }
+  .nb-auth-points {
+    display: none;
+  }
+}
+
+/* ---- Layout chat (T-20/T-21) ---- */
+.nb-shell {
+  display: flex;
+  height: 100vh;
+}
+.nb-shell-single {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+.nb-sidebar {
+  width: 16rem;
+  flex: none;
+  background: var(--card);
+  border-right: 3px solid var(--border-color);
+  padding: 1rem;
+  overflow-y: auto;
+}
+.nb-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+.nb-header {
+  display: flex;
+  align-items: center;
+  flex: none;
+  gap: 0.5rem;
+  background: var(--card);
+  border-bottom: 3px solid var(--border-color);
+  padding: 0.5rem 1rem;
+}
+.nb-header h1 {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.nb-me {
+  font-family: var(--font-head);
+  font-size: 0.875rem;
+  background: var(--muted);
+  border: 3px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.15rem 0.6rem;
+  max-width: 10rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.nb-room,
+.nb-room-active {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 0.5rem;
+  border: 3px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.nb-room {
+  background: var(--card);
+  color: var(--foreground);
+  box-shadow: 3px 3px 0 0 var(--border-color);
+}
+.nb-room-active {
+  background: var(--primary);
+  color: #1a1a2e;
+  box-shadow: 3px 3px 0 0 var(--border-color);
+}
+.nb-badge {
+  background: var(--accent);
+  color: #1a1a2e;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 2px solid var(--border-color);
+  border-radius: 999px;
+  padding: 0 0.5rem;
+}
+.nb-dot-on,
+.nb-dot-off {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 999px;
+  border: 2px solid var(--border-color);
+  flex: none;
+}
+.nb-dot-on {
+  background: var(--mint);
+}
+.nb-dot-off {
+  background: var(--destructive);
+}
+.nb-messages {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) transparent;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.nb-messages::-webkit-scrollbar {
+  width: 10px;
+}
+.nb-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+.nb-messages::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 8px;
+  border: 2px solid var(--background);
+}
+@media (prefers-reduced-motion: reduce) {
+  .nb-messages {
+    scroll-behavior: auto;
+  }
+}
+.nb-bubble,
+.nb-bubble-own {
+  max-width: 75%;
+  border: 3px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 3px 3px 0 0 var(--border-color);
+  padding: 0.5rem 0.75rem;
+  overflow-wrap: break-word;
+}
+.nb-bubble {
+  background: var(--card);
+  align-self: flex-start;
+}
+.nb-bubble-own {
+  background: var(--primary);
+  color: #1a1a2e;
+  align-self: flex-end;
+}
+.nb-bubble-name {
+  font-family: var(--font-head);
+  font-size: 0.75rem;
+  font-weight: 600;
+  opacity: 0.8;
+}
+.nb-bubble-body {
+  white-space: pre-wrap;
+}
+.nb-inputbar {
+  display: flex;
+  flex: none;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--card);
+  border-top: 3px solid var(--border-color);
+}
+.nb-inputbar .nb-btn {
+  align-self: flex-end;
+}
+.nb-inputwrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.nb-inputbar textarea {
+  max-height: 9.5rem;
+  overflow-y: auto;
+}
+.nb-count {
+  align-self: flex-end;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  opacity: 0.7;
+  margin-top: 0.25rem;
+}
+
+/* ---- Baris pesan + grup + avatar + divider (T-34) ---- */
+.nb-frag {
+  display: contents;
+}
+.nb-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-end;
+  width: 100%;
+}
+.nb-row-own {
+  justify-content: flex-end;
+}
+.nb-same {
+  margin-top: -0.5rem;
+}
+.nb-avatar {
+  flex: none;
+  width: 1.75rem;
+  height: 1.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: #1a1a2e;
+  border: 3px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 2px 2px 0 0 var(--border-color);
+}
+.nb-avatar-hide {
+  visibility: hidden;
+  box-shadow: none;
+}
+.nb-timestamp {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  opacity: 0.7;
+  margin-top: 0.25rem;
+  text-align: right;
+}
+.nb-bubble .nb-timestamp {
+  text-align: left;
+}
+.nb-day {
+  align-self: center;
+  background: var(--accent);
+  color: #1a1a2e;
+  font-family: var(--font-head);
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 3px solid var(--border-color);
+  border-radius: 999px;
+  box-shadow: 3px 3px 0 0 var(--border-color);
+  padding: 0.15rem 0.75rem;
+  margin: 0.25rem 0;
+}
+.nb-empty {
+  margin: auto;
+  text-align: center;
+  background: var(--card);
+  border: 3px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 4px 4px 0 0 var(--border-color);
+  padding: 1.25rem 1.5rem;
+  max-width: 20rem;
+}
+.nb-newmsg {
+  position: sticky;
+  bottom: 0.5rem;
+  align-self: center;
+  z-index: 5;
+  background: var(--accent);
+  color: #1a1a2e;
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: 3px solid var(--border-color);
+  border-radius: 999px;
+  box-shadow: 3px 3px 0 0 var(--border-color);
+  padding: 0.25rem 0.875rem;
+  cursor: pointer;
+}
+.nb-newmsg:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 0 var(--border-color);
+}
+.nb-title {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+.nb-sub {
+  font-size: 0.6875rem;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- Responsif mobile (T-24): sidebar jadi drawer ≤768px ---- */
+.nb-only-mobile {
+  display: none;
+}
+@media (max-width: 768px) {
+  .nb-only-mobile {
+    display: inline-flex;
+  }
+  .nb-sidebar {
+    position: fixed;
+    z-index: 40;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-105%);
+    box-shadow: 6px 0 0 0 var(--border-color);
+  }
+  .nb-sidebar[data-open='true'] {
+    transform: none;
+  }
+  .nb-bubble,
+  .nb-bubble-own {
+    max-width: 90%;
+  }
+  .nb-me {
+    max-width: 5.5rem;
+    font-size: 0.75rem;
+    padding: 0.1rem 0.4rem;
+  }
+  .nb-header {
+    gap: 0.375rem;
+    padding: 0.5rem 0.625rem;
+  }
+  .nb-header h1 {
+    font-size: 1.125rem;
+  }
+  .nb-btn-icon {
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 1.125rem;
+  }
+  .nb-inputbar {
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  }
+}
